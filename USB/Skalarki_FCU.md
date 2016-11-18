@@ -60,7 +60,32 @@ Sur le bus USB, il y a toujours un seul hôte et plusieurs périphériques.
 #### Structure logique d'un périphérique USB
 Dans la norme USB, un périphérique a une structure logique complexe. Il est découpé en une hiérarchie avec plusieurs niveau. Le premier niveau est le périphérique (Device). Un Device possède des configurations possibles. Chaque configuration va être associé à des Interfaces. Une interface est pour nous une sorte de périphérique logique. Pour communiquer avec ces interfaces, il est définit des point de terminaison (End point). Chaque End point est utilisé pour un et un seul type de transfert et dans un seul sens.
 
-Pour expliquer au système ce que le périphérique est capable de faire, à chaque niveau logique est associé un type de descripteur. 
+Pour expliquer au système ce que le périphérique est capable de faire, à chaque niveau logique est associé un type de descripteur. Cette organisation permet au périphérique physique de comporter plusieurs sous périphériques. Par exemple, pour une imprimante multifonction, un seul périphérique physique contient d'un point de vu logique un périphérique de capture d'image, un périphérique d'impression, un lecteur de cartes SD,... Dans un tel cas, l'organisation pourrait-être un simple Device, constitué d'une configuration et autant d'interfaces que de périphériques logiques. Pour chaque périphérique, des end-point correspondant à l'usage du périphérique.
+
+
+#### Les descripteurs
+
+##### Rôle des descripteurs 
+
+Il existe sur le marché de nombreux périphériques USB. Les créateurs de la norme souhaitait s'adapter à un grand nombre de cas imaginable sans connaitre de manière exhaustive tous les périphériques USB existant sur terre. En plus le bus USB devant être plug and play, il fallait que le périphérique soit intérogeable de manière standard. Lorsqu'un périphérique est connecté, il doit fournir à l'hôte toutes les informations nécessaires à son identification. Ces informations sont appelé les descripteurs.
+
+Les descripteurs sont regroupés en 4 catégorie correspondant au niveau de la structure logique d'un périphérique : 
+
+- Device descriptor
+- Configuration descriptor
+- Interface descriptor 
+- Endpoint descriptor
+
+Pour mieux comprendre le but de ces descripteurs, tout en aidant à l'objectif du p, l'exemple du FCU va être utilisé.
+
+
+##### Device descriptor
+
+##### Configuration descriptor
+
+##### Interface descriptor
+
+##### Endpoint descriptor
 
 #### Contrôle et configuration d'un périphérique
 
