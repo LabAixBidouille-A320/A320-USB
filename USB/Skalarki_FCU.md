@@ -49,4 +49,42 @@ Dans un A320, il y a des afficheurs 7 segments pour rendre visibles ces informat
 
 Le module FCU possède 24 afficheurs qui semblent eux aussi être arrangés en **GROUP** de 16 dans le logiciel. L'interaction sur ces groupes ne faisant rien, il n'est pas possible de comprendre en l'état l'utilité de cette fonctionnalité.
 
+## Périphérique USB
+Le Universal Serial Bus (USB) est une norme relative à un bus qui sert à connecter des périphériques. Le bus USB permet de connecter des périphériques à chaud (quand l'ordinateur est en marche). Apparu en 1996, ce connecteur s'est généralisé dans les années 2000 pour connecter souris, clavier d'ordinateur, imprimantes, clés USB et autres périphériques.
 
+### Généralités
+Cette norme étant très générale, elle comporte un certain nombre de niveau d'abstraction qui peuvent être déroutant en première lecture. Dans le cas du périphérique qui est le notre, on verra qu'une grande partie de cette complexité sera mise de coté car non indispensable. 
+
+Sur le bus USB, il y a toujours un seul hôte et plusieurs périphériques.
+
+#### Structure logique d'un périphérique USB
+Dans la norme USB, un périphérique a une structure logique complexe. Il est découpé en une hiérarchie avec plusieurs niveau. Le premier niveau est le périphérique (Device). Un Device possède des configurations possibles. Chaque configuration va être associé à des Interfaces. Une interface est pour nous une sorte de périphérique logique. Pour communiquer avec ces interfaces, il est définit des point de terminaison (End point). Chaque End point est utilisé pour un et un seul type de transfert et dans un seul sens.
+
+Pour expliquer au système ce que le périphérique est capable de faire, à chaque niveau logique est associé un type de descripteur. 
+
+#### Contrôle et configuration d'un périphérique
+
+Avant d'aller dans les détails, l'hôte reconnaît et installe un appareil lorsque vous le branchez. Lorsque vous branchez un périphérique USB, l'hôte sait (en raison d'une astuce electronique), qu'un dispositif a été branché.
+
+L'hôte signale une réinitialisation USB à l'appareil, afin de garantir un état connu à la fin de la remise à zéro. Dans cet état, le dispositif répond à l'adresse par défaut 0. Jusqu'à ce que le dispositif soit réinitialisé, l'hôte empêche les données d'être envoyé. Il ne réinitialise un seul appareil à la fois, donc il n'y a aucun danger que deux dispositifs puissent répondre à l'adresse 0.
+
+L'hôte va ensuite envoyer une demande au endpoint 0, l'adresse de l'appareil 0 à savoir sa taille maximale de paquet. Il peut découvrir cela en utilisant la commande `Get Descriptor (Device)`.
+
+En règle générale, l'hôte réinitialisent maintenant à nouveau le dispositif. Il envoie alors une demande d'adresses, avec une adresse unique. Après cette requête, l'appareil prend une nouvelle adresse. A ce stade, l'hôte est  libre de réinitialiser d'autres appareils récemment branchés.
+
+Typiquement, l'hôte va maintenant commencer à interroger le dispositif pour obtenir autant de détails que nécéssaire. 
+Pour ce faire, il va envoyer l'une des requête suivante :
+
+- Get Device Descriptor
+- Get Configuration Descriptor
+- Get String Descriptor
+
+Quand le dispositif est dans un état adressé, mais non configuré, et est autorisé à répondre aux demandes standard. Une fois que l'hôte a récupéré l'ensemble de ces données, il va charger le pilote de périphérique approprié. Le pilote de périphérique envoie une configuration à l'appareil, avec une requête `Set Configuration`. Le dispositif est maintenant dans l'état configuré, et peut commencer à être utilisé. Désormais, il peut répondre à des demandes spécifiques, en plus des demandes standards vu précédement.
+
+Dans la norme USB, il y a quatre types de transfert différents:
+- Transferts de contrôle
+- Transferts d'interruption
+- Transferts en vrac
+- Transferts isochrones
+
+Le seul type de transfert disponible pour un périphérique non configuré est le transfert de contrôle. 
