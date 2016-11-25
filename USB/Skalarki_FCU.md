@@ -80,12 +80,87 @@ Pour mieux comprendre le but de ces descripteurs, tout en aidant à l'objectif d
 
 
 ##### Device descriptor
+```
+Device: ID 04d8:0050 Microchip Technology, Inc. 
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0 (Defined at Interface level)
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0         8
+  idVendor           0x04d8 Microchip Technology, Inc.
+  idProduct          0x0050 
+  bcdDevice            0.00
+  iManufacturer           1 Skalarki Electronics .
+  iProduct                2 Skalarki Custom USB Device
+  iSerial                 0 
+  bNumConfigurations      1
+```
+
 
 ##### Configuration descriptor
+```
+Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           39
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower              500mA
+```
 
 ##### Interface descriptor
+```
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass    255 Vendor Specific Subclass
+      bInterfaceProtocol    255 Vendor Specific Protocol
+      iInterface              5 (error)
+```
 
 ##### Endpoint descriptor
+```
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+```
 
 #### Contrôle et configuration d'un périphérique
 
