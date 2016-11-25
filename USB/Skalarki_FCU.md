@@ -358,7 +358,85 @@ Pour lire les changements d'états du périphérique (interractions utilisateurs
 
 
 ### Description du protocole de communication
+Bien que simple comme périphérique dans sa structure, le FCU dispose d'un grand nombre d'entrées/sorties. Le travail de décodage complet du protocole est donc fastidieux s'il est pris frontalement. Pour éviter cela, on va essayer d'explorer progressivement le protocole pour faire apparaitre sa logique interne et plus facilement déduire la structure des messages.
+
+Pour ce faire, un logiciel d'analyse du protocole USB est utilisé. Il permet de voir comment le périphérique communique avec son hôte lors d'une interaction physique.
+
 #### Inputs
+Les *inputs* sont les relativement simples à tester car à chaque interaction physique il y a une interruption déclanchée.
+
+Par exemple lors de l'appuie sur Input 008 :
+```
+000001: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FE EE
+```
+On relache Input 008 :
+```
+000003: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FF EE
+```
+
+Appuie sur Input 009 :
+```
+000005: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FD EE
+```
+On relache Input 009 :
+```
+000007: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FF EE
+```
+Appuie sur Input 010 :
+```
+000009: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FB EE
+```
+On relache Input 010 :
+```
+000011: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FF EE
+```
+Appuie sur Input 011 :
+```
+000013: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 F7 EE
+```
+On relache Input 011 :
+```
+000015: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FF EE
+```
+Appuie sur Input 012 :
+```
+000017: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 EF EE
+```
+On relache Input 012 :
+```
+000019: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FF EE
+```
+
 #### ADC
 #### Outputs
 #### Displays
