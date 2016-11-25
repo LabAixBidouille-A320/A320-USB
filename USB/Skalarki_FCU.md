@@ -101,10 +101,11 @@ Les descripteurs sont regroupés en 4 catégorie correspondant au niveau de la s
 - Configuration descriptor
 - Interface descriptor 
 - Endpoint descriptor
+Pour mieux comprendre le but de ces descripteurs, tout en aidant à la meilleure compréhension du sujet, le FCU va être utilisé comme exemple.
 
-Pour mieux comprendre le but de ces descripteurs, tout en aidant à l'objectif du p, l'exemple du FCU va être utilisé.
+## Communication avec le FCU
 
-##### Récupération des descripteurs
+### Récupération des descripteurs
 Sous Linux, la commande `lsusb` récupère les informations sur les périphériques USB connectés au système. Elle permet donc entre-autre de lire les différents descripteurs.
 
 Sans argument, la commande retourne la liste des périphériques, leur position sur les bus, leur adresse et un descritif court.
@@ -200,7 +201,7 @@ Device Status:     0x0001
 ```
 Le résultat de cette commande donne la liste hiérarchisée des descripteurs du périphérique. 
 
-##### Device descriptor
+### Device descriptor
 Le descripteur de périphérique donne toute les informations au niveau le plus général possible. A ce niveau, 
 les attributs principaux sont les suivants : 
 
@@ -242,7 +243,7 @@ Device Descriptor:
 
 La majorité des propriétés sont explicites et ne nécéssite pas plus d'explication. Pour le *Vendor Id*, on voit que le fabricant est *Microchip* et pas *Skalarki*. Ceci s'explique car en réalité la gestion USB du FCU repose un microcontroleur PIC. Le fabriquant du FCU n'a pas achété de licence au consortium USB et s'est simplement contenté de développer un périphérique spécifique à son propre besoin. C'est d'ailleurs pour cela que le driver est parfois très compliqué à faire fonctionner sous Windows.
 
-##### Configuration descriptor
+### Configuration descriptor
 La configuration est le second niveau de la hiérarchie USB. Ce niveau est le moins simple à imaginer car en définitive, très peu de périphériques ont plus d'une configuration. Pour schématiser grossièrement, un périphérique USB avec plusieurs configuration est un périphérique qui peut être vu différement en fonction des besoin. Ce qu'il faut bien comprendre, c'est qu'un périphérique a au plus une seule configuration à un instant donné.
 
 - `bLength` : Taille du descripteur en byte
@@ -267,7 +268,7 @@ Configuration descriptor :
 ```
 Pour l'exemple, le niveau configuration n'étant pas réellement utilisé, le descripteur nous apporte le stric minimum.
 
-##### Interface descriptor
+### Interface descriptor
 Dans l'univers USB, l'interface correspond à un périphérique logique. C'est très souvent utiliser pour les périphériques (au sens Device USB) composites ou pour ceux qui ont plusieurs manières de communiquer avec l'hôte. Par exemple, un téléphone Android comporte deux interfaces, la première est celle utiliser pour la communication avec le debuger (ADB) et une seconde pour le transfert de fichier(MTP). 
 
 C'est généralement à ce niveau qu'est définit la classe du périphérique et sa sous-classe.
@@ -298,7 +299,7 @@ Interface Descriptor:
 ```
 Comme pour le niveau *configuration*, le niveau *interface* nous apporte que peu d'information sur le FCU. La première information importante est que le périphérique n'appartient à aucune classe préexistante, donc pas de possibilité de connaitre son mode de communication et surtout de pouvoir se baser sur des pilotes génériques. La seconde information importante, est que le périphérique sera constitué de 3 points de terminaison (endpoint).
 
-##### Endpoint descriptor
+### Endpoint descriptor
 Le dernier niveau d'un périphérique USB est le niveau *endpoint*. Comme son nom l'indique cela correspond aux points de terminaison de l'arbre des descripteurs. Chaque endpoint correspond à un point d'entrée ou de sortie avec le périphérique. 
 Les entrée, sont très généralement déclinée en deux en fonction du type de transfert choisi.
 
@@ -354,3 +355,10 @@ Endpoint Descriptor:
 On voit que pour envoyer des données au FCU, il faudra passer par des écritures brutes sur le endpoint `0x01`. Pour lire l'état du FCU, il y aura deux possibilités en fonction du besoin de réactivité. La première option sera de faire une lecture brute sur le endpoint `0x81`. Cette lecture brute permet de récupérer les données sur le périphérique.
 
 Pour lire les changements d'états du périphérique (interractions utilisateurs), il faut utiliser le mode interruption. Dans ce cas, c'est le endpoint `0x82` qui devra être utilisé.
+
+
+### Description du protocole de communication
+#### Inputs
+#### ADC
+#### Outputs
+#### Displays
