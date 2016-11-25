@@ -285,16 +285,16 @@ C'est généralement à ce niveau qu'est définit la classe du périphérique et
 Pour le FCU, voici les données associées :
 
 ```
-    Interface Descriptor:
-      bLength                 9
-      bDescriptorType         4
-      bInterfaceNumber        0
-      bAlternateSetting       0
-      bNumEndpoints           3
-      bInterfaceClass       255 Vendor Specific Class
-      bInterfaceSubClass    255 Vendor Specific Subclass
-      bInterfaceProtocol    255 Vendor Specific Protocol
-      iInterface              5 (error)
+Interface Descriptor:
+  bLength                 9
+  bDescriptorType         4
+  bInterfaceNumber        0
+  bAlternateSetting       0
+  bNumEndpoints           3
+  bInterfaceClass       255 Vendor Specific Class
+  bInterfaceSubClass    255 Vendor Specific Subclass
+  bInterfaceProtocol    255 Vendor Specific Protocol
+  iInterface              5 (error)
 ```
 Comme pour le niveau *configuration*, le niveau *interface* nous apporte que peu d'information sur le FCU. La première information importante est que le périphérique n'appartient à aucune classe préexistante, donc pas de possibilité de connaitre son mode de communication et surtout de pouvoir se baser sur des pilotes génériques. La seconde information importante, est que le périphérique sera constitué de 3 points de terminaison (endpoint).
 
@@ -313,43 +313,43 @@ Les entrée, sont très généralement déclinée en deux en fonction du type de
 Pour le FCU, voici les données associées :
 
 ```
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x01  EP 1 OUT
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval              1
+Endpoint Descriptor:
+  bLength                 7
+  bDescriptorType         5
+  bEndpointAddress     0x01  EP 1 OUT
+  bmAttributes            2
+    Transfer Type            Bulk
+    Synch Type               None
+    Usage Type               Data
+  wMaxPacketSize     0x0040  1x 64 bytes
+  bInterval              1
  
 ```
 
 ```
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x81  EP 1 IN
-        bmAttributes            2
-          Transfer Type            Bulk
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               1
+Endpoint Descriptor:
+  bLength                 7
+  bDescriptorType         5
+  bEndpointAddress     0x81  EP 1 IN
+  bmAttributes            2
+    Transfer Type            Bulk
+    Synch Type               None
+    Usage Type               Data
+  wMaxPacketSize     0x0040  1x 64 bytes
+  bInterval               1
 ```
 
 ```
-      Endpoint Descriptor:
-        bLength                 7
-        bDescriptorType         5
-        bEndpointAddress     0x82  EP 2 IN
-        bmAttributes            3
-          Transfer Type            Interrupt
-          Synch Type               None
-          Usage Type               Data
-        wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               1
+Endpoint Descriptor:
+  bLength                 7
+  bDescriptorType         5
+  bEndpointAddress     0x82  EP 2 IN
+  bmAttributes            3
+    Transfer Type            Interrupt
+    Synch Type               None
+    Usage Type               Data
+  wMaxPacketSize     0x0040  1x 64 bytes
+  bInterval               1
 ```
 On voit que pour envoyer des données au FCU, il faudra passer par des écritures brutes sur le endpoint `0x01`. Pour lire l'état du FCU, il y aura deux possibilités en fonction du besoin de réactivité. La première option sera de faire une lecture brute sur le endpoint `0x81`. Cette lecture brute permet de récupérer les données sur le périphérique.
 
