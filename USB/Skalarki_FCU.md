@@ -62,6 +62,32 @@ Dans la norme USB, un périphérique a une structure logique complexe. Il est d�
 
 Pour expliquer au système ce que le périphérique est capable de faire, à chaque niveau logique est associé un type de descripteur. Cette organisation permet au périphérique physique de comporter plusieurs sous périphériques. Par exemple, pour une imprimante multifonction, un seul périphérique physique contient d'un point de vu logique un périphérique de capture d'image, un périphérique d'impression, un lecteur de cartes SD,... Dans un tel cas, l'organisation pourrait-être un simple Device, constitué d'une configuration et autant d'interfaces que de périphériques logiques. Pour chaque périphérique, des end-point correspondant à l'usage du périphérique.
 
+#### Contrôle et configuration d'un périphérique
+
+Avant d'aller dans les détails, l'hôte reconnaît et installe un appareil lorsque vous le branchez. Lorsque vous branchez un périphérique USB, l'hôte sait (en raison d'une astuce electronique), qu'un dispositif a été branché.
+
+L'hôte signale une réinitialisation USB à l'appareil, afin de garantir un état connu à la fin de la remise à zéro. Dans cet état, le dispositif répond à l'adresse par défaut 0. Jusqu'à ce que le dispositif soit réinitialisé, l'hôte empêche les données d'être envoyé. Il ne réinitialise un seul appareil à la fois, donc il n'y a aucun danger que deux dispositifs puissent répondre à l'adresse 0.
+
+L'hôte va ensuite envoyer une demande au endpoint 0, l'adresse de l'appareil 0 à savoir sa taille maximale de paquet. Il peut découvrir cela en utilisant la commande `Get Descriptor (Device)`.
+
+En règle générale, l'hôte réinitialisent maintenant à nouveau le dispositif. Il envoie alors une demande d'adresses, avec une adresse unique. Après cette requête, l'appareil prend une nouvelle adresse. A ce stade, l'hôte est  libre de réinitialiser d'autres appareils récemment branchés.
+
+Typiquement, l'hôte va maintenant commencer à interroger le dispositif pour obtenir autant de détails que nécéssaire. 
+Pour ce faire, il va envoyer l'une des requête suivante :
+
+- Get Device Descriptor
+- Get Configuration Descriptor
+- Get String Descriptor
+
+Quand le dispositif est dans un état adressé, mais non configuré, et est autorisé à répondre aux demandes standard. Une fois que l'hôte a récupéré l'ensemble de ces données, il va charger le pilote de périphérique approprié. Le pilote de périphérique envoie une configuration à l'appareil, avec une requête `Set Configuration`. Le dispositif est maintenant dans l'état configuré, et peut commencer à être utilisé. Désormais, il peut répondre à des demandes spécifiques, en plus des demandes standards vu précédement.
+
+Dans la norme USB, il y a quatre types de transfert différents:
+- Transferts de contrôle
+- Transferts d'interruption
+- Transferts en vrac
+- Transferts isochrones
+
+Le seul type de transfert disponible pour un périphérique non configuré est le transfert de contrôle. 
 
 #### Les descripteurs
 
@@ -273,6 +299,19 @@ Pour le FCU, voici les données associées :
 Comme pour le niveau *configuration*, le niveau *interface* nous apporte que peu d'information sur le FCU. La première information importante est que le périphérique n'appartient à aucune classe préexistante, donc pas de possibilité de connaitre son mode de communication et surtout de pouvoir se baser sur des pilotes génériques. La seconde information importante, est que le périphérique sera constitué de 3 points de terminaison (endpoint).
 
 ##### Endpoint descriptor
+Le dernier niveau d'un périphérique USB est le niveau *endpoint*. Comme son nom l'indique cela correspond aux points de terminaison de l'arbre des descripteurs. Chaque endpoint correspond à un point d'entrée ou de sortie avec le périphérique. 
+Les entrée, sont très généralement déclinée en deux en fonction du type de transfert choisi.
+
+- `bLength` : Taille du descripteur en byte
+- `bDescriptorType` : Type du descripteur (0x05 pour les endpoint descriptor)
+- `bEndpointAddress` : Adresse du Endpoint. Le bit de poid fort de l'adresse définit le sens de communication (0: OUT, 1: IN)
+- `bmAttributes` : Attributs du endpoint. Permet de définir le type de transfert (Bulk, insochrone, interruption, ...), le type de synchronisation et l'usage (Donnée ou commande) 
+- `wMaxPacketSize` : Taille maximale des packets admissible par le point de terminaison 
+- `bInterval` : interval de service
+
+
+Pour le FCU, voici les données associées :
+
 ```
       Endpoint Descriptor:
         bLength                 7
@@ -307,30 +346,6 @@ Comme pour le niveau *configuration*, le niveau *interface* nous apporte que peu
         wMaxPacketSize     0x0040  1x 64 bytes
         bInterval               1
 ```
+On voit que pour envoyer des données au FCU, il faudra passer par des écritures brutes sur le endpoint `0x01`. Pour lire l'état du FCU, il y aura deux possibilités en fonction du besoin de réactivité. La première option sera de faire une lecture brute sur le endpoint `0x81`. Cette lecture brute permet de récupérer les données sur le périphérique.
 
-#### Contrôle et configuration d'un périphérique
-
-Avant d'aller dans les détails, l'hôte reconnaît et installe un appareil lorsque vous le branchez. Lorsque vous branchez un périphérique USB, l'hôte sait (en raison d'une astuce electronique), qu'un dispositif a été branché.
-
-L'hôte signale une réinitialisation USB à l'appareil, afin de garantir un état connu à la fin de la remise à zéro. Dans cet état, le dispositif répond à l'adresse par défaut 0. Jusqu'à ce que le dispositif soit réinitialisé, l'hôte empêche les données d'être envoyé. Il ne réinitialise un seul appareil à la fois, donc il n'y a aucun danger que deux dispositifs puissent répondre à l'adresse 0.
-
-L'hôte va ensuite envoyer une demande au endpoint 0, l'adresse de l'appareil 0 à savoir sa taille maximale de paquet. Il peut découvrir cela en utilisant la commande `Get Descriptor (Device)`.
-
-En règle générale, l'hôte réinitialisent maintenant à nouveau le dispositif. Il envoie alors une demande d'adresses, avec une adresse unique. Après cette requête, l'appareil prend une nouvelle adresse. A ce stade, l'hôte est  libre de réinitialiser d'autres appareils récemment branchés.
-
-Typiquement, l'hôte va maintenant commencer à interroger le dispositif pour obtenir autant de détails que nécéssaire. 
-Pour ce faire, il va envoyer l'une des requête suivante :
-
-- Get Device Descriptor
-- Get Configuration Descriptor
-- Get String Descriptor
-
-Quand le dispositif est dans un état adressé, mais non configuré, et est autorisé à répondre aux demandes standard. Une fois que l'hôte a récupéré l'ensemble de ces données, il va charger le pilote de périphérique approprié. Le pilote de périphérique envoie une configuration à l'appareil, avec une requête `Set Configuration`. Le dispositif est maintenant dans l'état configuré, et peut commencer à être utilisé. Désormais, il peut répondre à des demandes spécifiques, en plus des demandes standards vu précédement.
-
-Dans la norme USB, il y a quatre types de transfert différents:
-- Transferts de contrôle
-- Transferts d'interruption
-- Transferts en vrac
-- Transferts isochrones
-
-Le seul type de transfert disponible pour un périphérique non configuré est le transfert de contrôle. 
+Pour lire les changements d'états du périphérique (interractions utilisateurs), il faut utiliser le mode interruption. Dans ce cas, c'est le endpoint `0x82` qui devra être utilisé.
