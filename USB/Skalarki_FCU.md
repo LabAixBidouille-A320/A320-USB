@@ -175,6 +175,24 @@ Device Status:     0x0001
 Le résultat de cette commande donne la liste hiérarchisée des descripteurs du périphérique. 
 
 ##### Device descriptor
+Le descripteur de périphérique donne toute les informations au niveau le plus général possible. A ce niveau, 
+les attributs principaux sont les suivants : 
+
+- `bLength` : Taille du descripteur en byte
+- `bDescriptorType`  : Type du descripteur (0x01 pour les Device descriptor)
+- `bcdUSB` : Numéro de Version USB du périphérique
+- `bDeviceClass` : Classe du périphérique (si la valeur 0x00, c'est aux interface de définir la classe)
+- `bDeviceSubClass`
+- `bDeviceProtocol`
+- `bMaxPacketSize`
+- `idVendor`
+- `idProduct`
+- `bcdDevice`
+- `iManufacturer`
+- `iProduct`         
+- `iSerial`
+- `bNumConfigurations`
+
 ```
 Device: ID 04d8:0050 Microchip Technology, Inc. 
 Device Descriptor:
@@ -193,7 +211,6 @@ Device Descriptor:
   iSerial                 0 
   bNumConfigurations      1
 ```
-
 
 ##### Configuration descriptor
 ```
