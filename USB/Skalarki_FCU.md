@@ -78,6 +78,101 @@ Les descripteurs sont regroupés en 4 catégorie correspondant au niveau de la s
 
 Pour mieux comprendre le but de ces descripteurs, tout en aidant à l'objectif du p, l'exemple du FCU va être utilisé.
 
+##### Récupération des descripteurs
+Sous Linux, la commande `lsusb` récupère les informations sur les périphériques USB connectés au système. Elle permet donc entre-autre de lire les différents descripteurs.
+
+Sans argument, la commande retourne la liste des périphériques, leur position sur les bus, leur adresse et un descritif court.
+ 
+``` sh
+$ lsusb
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 003: ID 04f3:21d5 Elan Microelectronics Corp. 
+Bus 001 Device 002: ID 0a5c:6410 Broadcom Corp. 
+Bus 001 Device 006: ID 04d8:0050 Microchip Technology, Inc. 
+Bus 001 Device 004: ID 0c45:6713 Microdia 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+```
+Dans cet exemple, le périphérique qui nous intéresse correspon à la ligne : 
+
+```
+Bus 001 Device 006: ID 04d8:0050 Microchip Technology, Inc. 
+```
+
+Cette ligne nous indique que notre périphérique est sur bus USB n°1 et qu'il s'est vu attribuer le numéro de périphérique 6.
+Une fois cette information identifiée, on peut appeler la commande `lsusb` avec les arguments suivants.
+
+```
+lsusb -D /dev/bus/usb/001/006  
+Device: ID 04d8:0050 Microchip Technology, Inc. 
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.00
+  bDeviceClass            0 (Defined at Interface level)
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0         8
+  idVendor           0x04d8 Microchip Technology, Inc.
+  idProduct          0x0050 
+  bcdDevice            0.00
+  iManufacturer           1 Skalarki Electronics .
+  iProduct                2 Skalarki Custom USB Device
+  iSerial                 0 
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           39
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower              500mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass       255 Vendor Specific Class
+      bInterfaceSubClass    255 Vendor Specific Subclass
+      bInterfaceProtocol    255 Vendor Specific Protocol
+      iInterface              5 (error)
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               1
+Device Status:     0x0001
+  Self Powered
+```
+Le résultat de cette commande donne la liste hiérarchisée des descripteurs du périphérique. 
 
 ##### Device descriptor
 ```
@@ -139,7 +234,8 @@ Configuration Descriptor:
           Synch Type               None
           Usage Type               Data
         wMaxPacketSize     0x0040  1x 64 bytes
-        bInterval               1
+        bInterval              1
+      
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -150,6 +246,7 @@ Configuration Descriptor:
           Usage Type               Data
         wMaxPacketSize     0x0040  1x 64 bytes
         bInterval               1
+      
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
