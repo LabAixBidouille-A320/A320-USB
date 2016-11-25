@@ -30,6 +30,8 @@ Par exemple, pour importer le module ``core``, taper:
 
 ### Prise en main
 
+Voici un programme simpliste qui envoie la string 'test' au premier endpoint OUT trouvé.
+
 ```python
     import usb.core
     import usb.util
@@ -51,7 +53,7 @@ Par exemple, pour importer le module ``core``, taper:
 
     ep = usb.util.find_descriptor(
         intf,
-        # coupler le premier endpoint OUT
+        # coupler le premier endpoint OUT (sortie)
         custom_match = \
         lambda e: \
             usb.util.endpoint_direction(e.bEndpointAddress) == \
@@ -64,10 +66,15 @@ Par exemple, pour importer le module ``core``, taper:
 ```
 
 Les deux premières lignes importent des modules du package PyUSB. ``usb.core`` est le module principal et ``usb.util`` contient des fonctions utilitaires.
+
 La commande suivante cherche notre périphérique et retourne une instance d'objet s'il le trouve. Sinon, il retourne ``None`` et une erreur est levée.
+
 Ensuite, nous paramétrons la configuration à utiliser. À noter qu'ici aucun argument indiquant la configuration voulue n'est indiquée. En effet, beaucoup de configurations PyUSB ont des valeurs par défaut pour les périphériques communs. Dans ce cas, la configuration utilisée est la première trouvée.
+
 Après, nous cherchons l'endpoint qui nous intéresse dans la première interface que nous avons.
+
 Une fois trouvé, nous lui envoyons les données.
+
 
 Si nous connaissons l'adresse de l'endpoint à l'avance, nous pouvons simplement appeler la fonction ``write`` du périphérique objet:
 
@@ -76,3 +83,11 @@ Si nous connaissons l'adresse de l'endpoint à l'avance, nous pouvons simplement
 ```
 
 Ici, nous écrivons la string 'test' à l'endpoint d'adresse *1*. Les fonctions vues seront détaillées dans les sections suivantes.
+
+### Gestion d'erreurs
+
+Toutes les fonctions PyUSB lèvent une exception en cas d'erreur. Outre les [exceptions standard Python](http://docs.python.org/library/exceptions.html), PyUSB définit les erreurs liées à l'USB dans ``usb.core.USBError``.
+
+Nous pouvons aussi utiliser la fonctionnalité de [log](http://docs.python.org/library/logging.html). Pour l'activer, définir la variable d'environnement ``PYUSB_DEBUG`` avec un des noms de niveaux suivants: ``critical``, ``error``, ``warning``, ``info`` ou ``debug``.
+
+Par défaut les messages sont envoyés sur [sys.stderr](http://docs.python.org/library/sys.html). Pour les rediriger, définir la variable d'environnement ``PYUSB_LOG_FILENAME`` avec un fichier. i la valeur est un chemin valide, les messages seront écris dessus, sinon ils seront envoyés sur ``sys.stderr``.
