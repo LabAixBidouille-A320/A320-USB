@@ -182,16 +182,18 @@ les attributs principaux sont les suivants :
 - `bDescriptorType`  : Type du descripteur (0x01 pour les Device descriptor)
 - `bcdUSB` : Numéro de Version USB du périphérique
 - `bDeviceClass` : Classe du périphérique (si la valeur 0x00, c'est aux interface de définir la classe)
-- `bDeviceSubClass`
-- `bDeviceProtocol`
-- `bMaxPacketSize`
-- `idVendor`
-- `idProduct`
-- `bcdDevice`
-- `iManufacturer`
-- `iProduct`         
-- `iSerial`
-- `bNumConfigurations`
+- `bDeviceSubClass` : Sous-classe de prériphérique
+- `bDeviceProtocol` : Protocole utilisé
+- `bMaxPacketSize` : Taille maximale des packets pour le endpoint 0
+- `idVendor` : Identificateur unique du fabriquant (attribué par le consortium USB)
+- `idProduct` :  Identificateur produit (choisit par le fabricant)
+- `bcdDevice` : Numéro de version du périphérique
+- `iManufacturer` : Indice de la chaine de description du fabricant 
+- `iProduct` : Indice de la chaine de description du produit         
+- `iSerial` : Indice de la chaine contenant le numéro de série
+- `bNumConfigurations` : Nombre de configurations existantes pour le périphérique
+
+Pour le FCU, voici les données associées :
 
 ```
 Device: ID 04d8:0050 Microchip Technology, Inc. 
@@ -211,6 +213,8 @@ Device Descriptor:
   iSerial                 0 
   bNumConfigurations      1
 ```
+
+La majorité des propriétés sont explicites et ne nécéssite pas plus d'explication. Pour le *Vendor Id*, on voit que le fabricant est *Microchip* et pas *Skalarki*. Ceci s'explique car en réalité la gestion USB du FCU repose un microcontroleur PIC. Le fabriquant du FCU n'a pas achété de licence au consortium USB et s'est simplement contenté de développer un périphérique spécifique à son propre besoin. C'est d'ailleurs pour cela que le driver est parfois très compliqué à faire fonctionner sous Windows.
 
 ##### Configuration descriptor
 ```
