@@ -1,6 +1,6 @@
 # PyUSB 1.0
 
-[Traduction libérale du tutoriel originel anglais](https://github.com/walac/pyusb/blob/master/docs/tutorial.rst)
+Traduction libérale du [tutoriel originel anglais](https://github.com/walac/pyusb/blob/master/docs/tutorial.rst)
 
 ## Introduction
 
@@ -14,25 +14,23 @@ L'USB est un protocole complexe, mais PyUSB a des valeurs par défaut pour la pl
 
 Les modules PyUSB modules sont dans le *package* ``usb`` Il s'agit de:
 
-======= ===========
-Contenu Description
-------- -----------
-core    Le module USB principal.
-util    Functions utilitaires.
-control Requêtes de contrôle standard.
-legacy  La couche de compatibilité 0.x.
-backend Un sous-package contenant les backends fournies.
-======= ===========
+Contenu	| Description
+-------	| -----------
+core    | Le module USB principal.
+util    | Functions utilitaires.
+control | Requêtes de contrôle standard.
+legacy  | La couche de compatibilité 0.x.
+backend | Un sous-package contenant les backends fournies.
+======= | ===========
 
-Par exemple, pour importer le module ``core``, taper::
+Par exemple, pour importer le module ``core``, taper:
 
     >>> import usb.core
     >>> dev = usb.core.find()
 
 ### Prise en main
 
-.. code-block:: python
-
+```python
     import usb.core
     import usb.util
 
@@ -63,6 +61,7 @@ Par exemple, pour importer le module ``core``, taper::
 
     # écrire les données
     ep.write('test')
+```
 
 Les deux premières lignes importent des modules du package PyUSB. ``usb.core`` est le module principal et ``usb.util`` contient des fonctions utilitaires.
 La commande suivante cherche notre périphérique et retourne une instance d'objet s'il le trouve. Sinon, il retourne ``None`` et une erreur est levée.
@@ -72,8 +71,8 @@ Une fois trouvé, nous lui envoyons les données.
 
 Si nous connaissons l'adresse de l'endpoint à l'avance, nous pouvons simplement appeler la fonction ``write`` du périphérique objet:
 
-.. code-block:: python
-
+```python
     dev.write(1, 'test')
+```
 
-Ici, nous écrivons la string 'test' à l'endpoint d'adresse *1*. Les fonctions vues seront détaillées dans les sections plus bas.
+Ici, nous écrivons la string 'test' à l'endpoint d'adresse *1*. Les fonctions vues seront détaillées dans les sections suivantes.
