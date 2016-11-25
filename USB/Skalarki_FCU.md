@@ -217,8 +217,20 @@ Device Descriptor:
 La majorité des propriétés sont explicites et ne nécéssite pas plus d'explication. Pour le *Vendor Id*, on voit que le fabricant est *Microchip* et pas *Skalarki*. Ceci s'explique car en réalité la gestion USB du FCU repose un microcontroleur PIC. Le fabriquant du FCU n'a pas achété de licence au consortium USB et s'est simplement contenté de développer un périphérique spécifique à son propre besoin. C'est d'ailleurs pour cela que le driver est parfois très compliqué à faire fonctionner sous Windows.
 
 ##### Configuration descriptor
+La configuration est le second niveau de la hiérarchie USB. Ce niveau est le moins simple à imaginer car en définitive, très peu de périphériques ont plus d'une configuration. Pour schématiser grossièrement, un périphérique USB avec plusieurs configuration est un périphérique qui peut être vu différement en fonction des besoin. Ce qu'il faut bien comprendre, c'est qu'un périphérique a au plus une seule configuration à un instant donné.
+
+- `bLength` : Taille du descripteur en byte
+- `bDescriptorType` : Type du descripteur (0x02 pour les configuration descriptor)
+- `wTotalLength` : Taille totale en byte du descripteur de configuration ainsi que tous les descripteurs subordonnés
+- `bNumInterfaces` : Nombres d'interfaces associées à cette configuration
+- `bConfigurationValue` : Identificateur de la configuration (à utiliser avec les requêtes `Set Configuration` et `Get Configuration`)
+- `iConfiguration` : Indice de la chaine de description de la configuration
+- `bmAttributes` : Information sur la gestion de l'alimentation
+
+Pour le FCU, voici les données associées :
+
 ```
-Configuration Descriptor:
+Configuration descriptor :
     bLength                 9
     bDescriptorType         2
     wTotalLength           39
@@ -226,11 +238,26 @@ Configuration Descriptor:
     bConfigurationValue     1
     iConfiguration          0 
     bmAttributes         0xc0
-      Self Powered
-    MaxPower              500mA
 ```
+Pour l'exemple, le niveau configuration n'étant pas réellement utilisé, le descripteur nous apporte le stric minimum.
 
 ##### Interface descriptor
+Dans l'univers USB, l'interface correspond à un périphérique logique. C'est très souvent utiliser pour les périphériques (au sens Device USB) composites ou pour ceux qui ont plusieurs manières de communiquer avec l'hôte. Par exemple, un téléphone Android comporte deux interfaces, la première est celle utiliser pour la communication avec le debuger (ADB) et une seconde pour le transfert de fichier(MTP). 
+
+C'est généralement à ce niveau qu'est définit la classe du périphérique et sa sous-classe.
+
+- `bLength` : Taille du descripteur en byte
+- `bDescriptorType` : Type du descripteur (0x04 pour les interface descriptor)
+- `bInterfaceNumber` : Identifiant de l'interface
+- `bAlternateSetting` : Identifiant utiliser pour retrouver les réglages alternatifs de l'interface
+- `bNumEndpoints` : Nombre de End-point associés à l'interface
+- `bInterfaceClass` : Classe du périphérique logique correspondant à l'interface
+- `bInterfaceSubClass` : Sous-classe du périphérique logique correspondant à l'interface
+- `bInterfaceProtocol` : protocole du périphérique logique correspondant à l'interface
+- `iInterface` : indice de la Chaine de description de l'interface
+
+Pour le FCU, voici les données associées :
+
 ```
     Interface Descriptor:
       bLength                 9
@@ -243,6 +270,7 @@ Configuration Descriptor:
       bInterfaceProtocol    255 Vendor Specific Protocol
       iInterface              5 (error)
 ```
+Comme pour le niveau *configuration*, le niveau *interface* nous apporte que peu d'information sur le FCU. La première information importante est que le périphérique n'appartient à aucune classe préexistante, donc pas de possibilité de connaitre son mode de communication et surtout de pouvoir se baser sur des pilotes génériques. La seconde information importante, est que le périphérique sera constitué de 3 points de terminaison (endpoint).
 
 ##### Endpoint descriptor
 ```
