@@ -323,7 +323,10 @@ Pour le FCU, voici les données associées :
           Usage Type               Data
         wMaxPacketSize     0x0040  1x 64 bytes
         bInterval              1
-      
+ 
+```
+
+```
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
@@ -334,7 +337,9 @@ Pour le FCU, voici les données associées :
           Usage Type               Data
         wMaxPacketSize     0x0040  1x 64 bytes
         bInterval               1
-      
+```
+
+```
       Endpoint Descriptor:
         bLength                 7
         bDescriptorType         5
