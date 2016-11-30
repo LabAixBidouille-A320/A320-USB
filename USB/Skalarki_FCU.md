@@ -464,7 +464,7 @@ Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
 Get 0x4 bytes from the device
  36 41 FF EE
 ```
-En décodant en binaire les deux derniers octets(`1110 0000 1110 1110`), l'hypothèse est vérifiée. Les bits de rang 8 à 12 sont passés à 0 comme prévu. En se basant sur ce raisonnement, les deux 0 dans le dernier octet doivent indiquer que les entrèes 0 et 4 doivent être activées. Une vérification sur le logiciel *SkalarkiIO Profiler 5* le confirme.
+En décodant en binaire les deux derniers octets(`1110 0000 1110 1110`), l'hypothèse est vérifiée. Les bits de rang 8 à 12 sont passés à 0 comme prévu. En se basant sur ce raisonnement, les deux `0` dans le dernier octet de chaque message doivent indiquer que les entrèes 0 et 4 sont activées. Une vérification sur le logiciel *SkalarkiIO Profiler 5* le confirme et conforte notre raisonement.
 
 Le message envoyé par le endpoint d'intérruption `0x82` est donc relativement simple à comprendre au premier abord. Comme les sorties, les entrées sont groupées par 16. Chaque groupe doit avoir une adresse qui devrait être contenue dans les deux premiers octets du message. En continuant les essais sur des entrèes supérieures à la 15, la logique d'adressage devrait apparaitre simplement s'il y en a une.
 
