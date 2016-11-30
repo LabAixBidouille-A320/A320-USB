@@ -468,7 +468,7 @@ En décodant en binaire les deux derniers octets(`1110 0000 1110 1110`), l'hypot
 
 Le message envoyé par le endpoint d'intérruption `0x82` est donc relativement simple à comprendre au premier abord. Comme les sorties, les entrées sont groupées par 16. Chaque groupe doit avoir une adresse qui devrait être contenue dans les deux premiers octets du message. En continuant les essais sur des entrèes supérieures à la 15, la logique d'adressage devrait apparaitre simplement s'il y en a une.
 
-Intuitivement, les groupes devrait avoir la structure suivante : 
+Intuitivement, en extrapolant les données déjà récupérées, les groupes devraient avoir la structure d'adressage suivante : 
 
 | Numéro de groupe | Entrées          | Adresse    |
 | -----------------| -----------------| ----------:|
@@ -479,6 +479,51 @@ Intuitivement, les groupes devrait avoir la structure suivante :
 | 5                | 64 - 79          | `0x36 0x45`|
 | 6                | 80 - 96          | `0x36 0x46`|
 
+Pour vérifier si c'est bien le cas et pour s'épargner des reboots intenpestifs sous windows, on va écrire un petit programme python utilisant [PyUSB](PyUSB.md) qui récupère les données sur le Endpoint `0x82`.
+
+``` python
+#!/usr/bin/python
+# -*- coding:utf8 -*-
+
+import sys
+import usb.core
+import usb.util
+
+# Connexion spécifique FCU
+
+dev = usb.core.find(find_all=False, idVendor=0x04D8, idProduct=0x0050)
+interface = 0
+if dev.is_kernel_driver_active(interface) is True:
+    # tell the kernel to detach
+    dev.detach_kernel_driver(interface)
+    # claim the device
+    usb.util.claim_interface(dev, interface)
+
+def main():
+    while True:
+        try:
+            data = dev.read(0x82, 4, 5000)
+            commande = (data[0]<<8) + (data[1] & 0xF0) 
+            groupe = data[1] & 0x0F
+            etat = data[2:4]
+            bits =  [int(etat[i//8] & 1 << i%8 != 0) for i in range(len(etat) * 8)]
+            print 'Commande : {} , Groupe : {}, Etat : {}'.format(hex(commande), groupe, bits)
+        except usb.core.USBError as e:
+            data = None
+            if e.args == ('Operation timed out',):
+                continue
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print 'Killed by user'
+        # release the device
+        usb.util.release_interface(dev, interface)
+        # reattach the device to the OS kernel
+        dev.attach_kernel_driver(interface)
+        sys.exit(0)            
+```
 
 #### ADC
 #### Outputs
