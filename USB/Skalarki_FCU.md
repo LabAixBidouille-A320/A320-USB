@@ -475,14 +475,14 @@ Le message envoyé par le endpoint d'intérruption `0x82` est donc relativement 
 
 Intuitivement, les groupes devrait avoir la structure suivante : 
 
-| Numéro de groupe | Entrées          | Adresse  |
-| -----------------| -----------------| --------:|
-| 1                | 0  - 15          | 36 41    |
-| 2                | 16 - 31          | 36 42    |
-| 3                | 32 - 47          | 36 43    |
-| 4                | 48 - 63          | 36 44    |
-| 5                | 64 - 79          | 36 45    |
-| 6                | 80 - 96          | 36 46    |
+| Numéro de groupe | Entrées          | Adresse    |
+| -----------------| -----------------| ----------:|
+| 1                | 0  - 15          | `0x36 0x41`|
+| 2                | 16 - 31          | `0x36 0x42`|
+| 3                | 32 - 47          | `0x36 0x43`|
+| 4                | 48 - 63          | `0x36 0x44`|
+| 5                | 64 - 79          | `0x36 0x45`|
+| 6                | 80 - 96          | `0x36 0x46`|
 
 
 #### ADC
