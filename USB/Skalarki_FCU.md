@@ -439,15 +439,10 @@ Get 0x4 bytes from the device
 Chaque message reçu comporte 4 octets dans notre session d'exemple les 2 premiers octets sont toujours `0x36` et `0x41` (la notation `0x` vient du langage C dans lequel les litéraux commençants ainsi sont des nombres en hexadécimal). Dans un  premier temps, ils vont donc être ignorés. Pour mieux comprendre le protocole, les deux derniers octets vont être écrits en binaire.
 
 - Appuie sur Input 08 : `1111 1110 1110 1110`
-- Relache Input 08 : `1111 1110 1110 1110`
 - Appuie sur Input 09 : `1111 1101 1110 1110`
-- Relache Input 09 : `1111 1111 1110 1110`
 - Appuie sur Input 10 : `1111 1011 1110 1110`
-- Relache Input 10 : `1111 1111 1110 1110`
 - Appuie sur Input 11 : `1111 0111 1110 1110`
-- Relache Input 11 : `1111 1111 1110 1110`
 - Appuie sur Input 12 : `1110 1111 1110 1110`
-- Relache Input 12 : `1111 1111 1110 1110`
 
 Tout d'abord, quand on relache un bouton poussoir, on voit que tout revient dans l'état précédent. Cet état particulier doit avoir un sens mais dans un premier temps il n'est pas rechercher.
 
