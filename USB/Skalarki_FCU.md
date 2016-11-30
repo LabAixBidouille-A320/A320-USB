@@ -436,6 +436,46 @@ Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
 Get 0x4 bytes from the device
  36 41 FF EE
 ```
+Chaque message reçu comporte 4 octets dans notre session d'exemple les 2 premiers octets sont toujours `0x36` et `0x41` (la notation `0x` vient du langage C dans lequel les litéraux commençants ainsi sont des nombres en hexadécimal). Dans un  premier temps, ils vont donc être ignorés. Pour mieux comprendre le protocole, les deux derniers octets vont être écrits en binaire.
+
+- Appuie sur Input 08 : `1111 1110 1110 1110`
+- Relache Input 08 : `1111 1110 1110 1110`
+- Appuie sur Input 09 : `1111 1101 1110 1110`
+- Relache Input 09 : `1111 1111 1110 1110`
+- Appuie sur Input 10 : `1111 1011 1110 1110`
+- Relache Input 10 : `1111 1111 1110 1110`
+- Appuie sur Input 11 : `1111 0111 1110 1110`
+- Relache Input 11 : `1111 1111 1110 1110`
+- Appuie sur Input 12 : `1110 1111 1110 1110`
+- Relache Input 12 : `1111 1111 1110 1110`
+
+Tout d'abord, quand on relache un bouton poussoir, on voit que tout revient dans l'état précédent. Cet état particulier doit avoir un sens mais dans un premier temps il n'est pas rechercher.
+
+Pour l'activation d'une entrée, il est visible qu'à chaque fois qu'une input est appuyée, l'un des bits passe de 1 à 0. Si on regarde l'indice du bit, on voit que quand l'on appuie sur l'Input `i` c'est le i eme bit qui change de valeur.
+
+Il semble donc que chaque message donne la valeur de 16 entrée différentes. Pour vérifier cette hypothèse, appuyons sur les entrées de 8 à 12 en même temps.
+
+Appuie sur Input 08, 09, 10, 11, 12 :
+```
+000017: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 E0 EE
+```
+On relache  :
+```
+000019: Bulk or Interrupt Transfer (UP), (1. Device: SKALARKI I/O GLARE) Status: 0x00000000
+Pipe Handle: 0xde0790e0 (Endpoint Address: 0x82)
+Get 0x4 bytes from the device
+ 36 41 FF EE
+```
+En décodant en binaire les deux derniers octets(`1110 0000 1110 1110`), l'hypothèse est vérifiée. Les bits de rang 8 à 12 sont passés à 0 comme prévu. En se basant sur ce raisonnement, les deux 0 dans le dernier octet doivent indiquer que les entrèes 0 et 4 doivent être activées. Une vérification sur le logiciel *SkalarkiIO Profiler 5* le confirme.
+
+Le message envoyé par le endpoint d'intérruption `0x82` est donc relativement simple à comprendre au premier abord. Comme les sorties, les entrées sont groupées par 16. Chaque groupe doit avoir une adresse qui devrait être contenue dans les deux premiers octets du message. En continuant les essais sur des entrèes supérieures à la 15, la logique d'adressage devrait apparaitre simplement s'il y en a une.
+
+Intuitivement, les groupes devrait avoir la structure suivante : 
+
+
 
 #### ADC
 #### Outputs
