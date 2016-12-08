@@ -473,11 +473,11 @@ Intuitivement, en extrapolant les données déjà récupérées, les groupes dev
 | Numéro de groupe | Entrées          | Adresse    |
 | -----------------| -----------------| ----------:|
 | 1                | 0  - 15          | `0x36 0x41`|
-| 2                | 16 - 31          | `0x36 0x42`|
-| 3                | 32 - 47          | `0x36 0x43`|
-| 4                | 48 - 63          | `0x36 0x44`|
-| 5                | 64 - 79          | `0x36 0x45`|
-| 6                | 80 - 96          | `0x36 0x46`|
+| 2                | 16 - 31          | `0x36 0x43`|
+| 3                | 32 - 47          | `0x36 0x45`|
+| 4                | 48 - 63          | `0x36 0x47`|
+| 5                | 64 - 79          | `0x36 0x49`|
+| 6                | 80 - 96          | `0x36 0x4b`|
 
 Pour vérifier si c'est bien le cas et pour s'épargner des reboots intenpestifs sous windows, on va écrire un petit programme python utilisant [PyUSB](PyUSB.md) qui récupère les données sur le Endpoint `0x82`.
 
